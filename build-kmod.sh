@@ -1,4 +1,4 @@
-#!/system/bin/sh -eu
+#!/bin/bash -eu
 set -a
 CC=aarch64-linux-android32-clang
 CXX=aarch64-linux-android32-clang++
