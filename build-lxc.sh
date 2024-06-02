@@ -1,9 +1,21 @@
 #!/bin/bash -eu
+TARGET=x86
+
 set -a
-CC=aarch64-linux-android32-clang
-CXX=aarch64-linux-android32-clang++
+
+if [[ "${TARGET}" == 'x86' ]]; then
+  CC=x86_64-linux-android33-clang
+  CXX=x86_64-linux-android33-clang++
+  BUILD_TARGET=x86_64-linux-android
+else
+  CC=aarch64-linux-android32-clang
+  CXX=aarch64-linux-android32-clang++
+  BUILD_TARGET=aarch64-linux-android
+fi
+
 AR=llvm-ar
 STRIP=llvm-strip
+
 set +a
 
 git clone https://github.com/lxc/lxc -b lxc-4.0.12 --single-branch --depth=1
@@ -12,8 +24,8 @@ mkdir destdir
 
 ./autogen.sh
 ./configure \
-  --host=aarch64-linux-android \
-  --target=aarch64-linux-android \
+  --host="$BUILD_TARGET" \
+  --target="$BUILD_TARGET" \
   --prefix=/system \
   --bindir=/system/bin \
   --sbindir=/system/sbin \
