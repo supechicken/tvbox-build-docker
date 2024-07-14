@@ -51,5 +51,14 @@ vim builddir/config.h
 ninja -C builddir
 DESTDIR=$PWD/destdir ninja -C builddir install
 
-echo destdir/system/share/bash-*
-rm -rf destdir/system/share/bash-*
+ls destdir/system/share/bash-* destdir/system/include destdir/system/lib64/pkgconfig
+rm -rf destdir/system/share/bash-* destdir/system/include destdir/system/lib64/pkgconfig
+
+mv destdir/system/bin/lxc-attach destdir/system/bin/lxc-attach.real
+cat <<'EOF' > destdir/system/bin/lxc-attach
+#!/system/bin/sh -eu
+
+exec lxc-attach.real -e "${@}"
+EOF
+
+chmod +x destdir/system/bin/lxc-attach
