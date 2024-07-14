@@ -30,6 +30,7 @@ meson setup --cross-file=cross.txt builddir \
   -Dstrip=true \
   -Db_lto=true \
   -Dprefix=/system \
+  -Dlibdir=/system/lib64 \
   -Dlocalstatedir=/data/local/var \
   -Druntime-path=/data/local/run \
   -Dcoverity-build=false \
@@ -45,3 +46,10 @@ meson setup --cross-file=cross.txt builddir \
   -Dapparmor=false \
   -Dopenssl=false \
   -Dselinux=false
+
+vim builddir/config.h
+ninja -C builddir
+DESTDIR=$PWD/destdir ninja -C builddir install
+
+echo destdir/system/share/bash-*
+rm -rf destdir/system/share/bash-*
