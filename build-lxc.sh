@@ -3,50 +3,45 @@ TARGET=x86
 
 set -a
 
-if [[ "${TARGET}" == 'x86' ]]; then
-  CC=x86_64-linux-android33-clang
-  CXX=x86_64-linux-android33-clang++
-  BUILD_TARGET=x86_64-linux-android
-else
-  CC=aarch64-linux-android32-clang
-  CXX=aarch64-linux-android32-clang++
-  BUILD_TARGET=aarch64-linux-android
-fi
-
 AR=llvm-ar
 STRIP=llvm-strip
 
 set +a
 
-git clone https://github.com/lxc/lxc -b lxc-4.0.12 --single-branch --depth=1
+git clone https://github.com/lxc/lxc -b v6.0.1 --single-branch --depth=1
 cd lxc
-mkdir destdir
 
-./autogen.sh
-./configure \
-  --host="$BUILD_TARGET" \
-  --target="$BUILD_TARGET" \
-  --prefix=/system \
-  --bindir=/system/bin \
-  --sbindir=/system/sbin \
-  --libdir=/system/lib64 \
-  --localstatedir=/data/local/var \
-  --with-runtime-path=/data/local/run \
-  --with-distro=android \
-  --with-init-script='' \
-  --enable-strip \
-  --disable-werror \
-  --disable-apparmor \
-  --disable-capabilities \
-  --disable-seccomp \
-  --disable-selinux \
-  --disable-openssl \
-  --disable-doc \
-  --disable-api-docs \
-  --disable-bash \
-  --disable-examples
+cat <<'EOF' > cross.txt
+[binaries]
+c = 'x86_64-linux-android33-clang'
+cpp = 'x86_64-linux-android33-clang++'
+ar = 'llvm-ar'
+strip = 'llvm-strip'
 
-sed -i 's/#include "fexecve.h"//' src/lxc/rexec.c
+[host_machine]
+system = 'android'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
 
-make -j8
-make -i DESTDIR=$PWD/destdir install-strip
+meson setup --cross-file=cross.txt builddir \
+  -Dbuildtype=release \
+  -Dstrip=true \
+  -Db_lto=true \
+  -Dprefix=/system \
+  -Dlocalstatedir=/data/local/var \
+  -Druntime-path=/data/local/run \
+  -Dcoverity-build=false \
+  -Dexamples=false \
+  -Dinit-script=[] \
+  -Dman=false \
+  -Dtests=false \
+  -Ddbus=false \
+  -Dspecfile=false \
+  -Dtools-multicall=true \
+  -Dcapabilities=false \
+  -Dseccomp=false \
+  -Dapparmor=false \
+  -Dopenssl=false \
+  -Dselinux=false
