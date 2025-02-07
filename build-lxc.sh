@@ -1,6 +1,4 @@
 #!/bin/bash -eu
-TARGET=x86
-
 set -a
 
 AR=llvm-ar
@@ -8,7 +6,7 @@ STRIP=llvm-strip
 
 set +a
 
-git clone https://github.com/lxc/lxc -b v6.0.1 --single-branch --depth=1
+git clone https://github.com/lxc/lxc -b v6.0.3 --single-branch --depth=1
 cd lxc
 
 cat <<'EOF' > cross.txt
@@ -29,8 +27,8 @@ meson setup --cross-file=cross.txt builddir \
   -Dbuildtype=release \
   -Dstrip=true \
   -Db_lto=true \
-  -Dprefix=/system \
-  -Dlibdir=/system/lib64 \
+  -Dprefix=/data/adb/modules/lxc/system \
+  -Dlibdir=/data/adb/modules/lxc/system/lib64 \
   -Dlocalstatedir=/data/local/var \
   -Druntime-path=/data/local/run \
   -Dcoverity-build=false \
@@ -61,4 +59,5 @@ cat <<'EOF' > destdir/system/bin/lxc-attach
 exec lxc-attach.real -e "${@}"
 EOF
 
+sed -i 
 chmod +x destdir/system/bin/lxc-attach
