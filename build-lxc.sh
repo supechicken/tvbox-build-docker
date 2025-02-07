@@ -11,15 +11,15 @@ cd lxc
 
 cat <<'EOF' > cross.txt
 [binaries]
-c = 'x86_64-linux-android33-clang'
-cpp = 'x86_64-linux-android33-clang++'
+c = 'aarch64-linux-android32-clang'
+cpp = 'aarch64-linux-android32-clang++'
 ar = 'llvm-ar'
 strip = 'llvm-strip'
 
 [host_machine]
 system = 'android'
-cpu_family = 'x86_64'
-cpu = 'x86_64'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
 endian = 'little'
 EOF
 
@@ -61,3 +61,6 @@ EOF
 
 sed -i 
 chmod +x destdir/system/bin/lxc-attach
+
+find . -type f -exec sed -i 's,#!/bin/sh,#!/system/bin/sh,' {} \;
+find . -type f -exec sed -i 's,#!/bin/bash,#!/system/bin/sh,' {} \;
