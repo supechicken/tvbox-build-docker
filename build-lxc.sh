@@ -52,15 +52,15 @@ DESTDIR=$PWD/destdir ninja -C builddir install
 ls destdir/data/adb/modules/lxc/system/share/bash-* destdir/data/adb/modules/lxc/system/include destdir/data/adb/modules/lxc/system/lib64/pkgconfig
 rm -rf destdir/data/adb/modules/lxc/system/share/bash-* destdir/data/adb/modules/lxc/system/include destdir/data/adb/modules/lxc/system/lib64/pkgconfig
 
-mv destdir/system/bin/lxc-attach destdir/system/bin/lxc-attach.real
-cat <<'EOF' > destdir/system/bin/lxc-attach
+mv destdir/data/adb/modules/lxc/system/bin/lxc-attach destdir/data/adb/modules/lxc/system/bin/lxc-attach.real
+cat <<'EOF' > destdir/data/adb/modules/lxc/system/bin/lxc-attach
 #!/system/bin/sh -eu
 
 exec lxc-attach.real -e "${@}"
 EOF
 
 sed -i 
-chmod +x destdir/system/bin/lxc-attach
+chmod +x destdir/data/adb/modules/lxc/system/bin/lxc-attach
 
 find . -type f -exec sed -i 's,#!/bin/sh,#!/system/bin/sh,' {} \;
 find . -type f -exec sed -i 's,#!/bin/bash,#!/system/bin/sh,' {} \;
