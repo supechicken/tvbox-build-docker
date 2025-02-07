@@ -49,8 +49,8 @@ vim builddir/config.h
 ninja -C builddir
 DESTDIR=$PWD/destdir ninja -C builddir install
 
-ls destdir/system/share/bash-* destdir/system/include destdir/system/lib64/pkgconfig
-rm -rf destdir/system/share/bash-* destdir/system/include destdir/system/lib64/pkgconfig
+ls destdir/data/adb/modules/lxc/system/share/bash-* destdir/data/adb/modules/lxc/system/include destdir/data/adb/modules/lxc/system/lib64/pkgconfig
+rm -rf destdir/data/adb/modules/lxc/system/share/bash-* destdir/data/adb/modules/lxc/system/include destdir/data/adb/modules/lxc/system/lib64/pkgconfig
 
 mv destdir/system/bin/lxc-attach destdir/system/bin/lxc-attach.real
 cat <<'EOF' > destdir/system/bin/lxc-attach
