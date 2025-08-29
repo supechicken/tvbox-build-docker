@@ -6,20 +6,20 @@ STRIP=llvm-strip
 
 set +a
 
-git clone https://github.com/lxc/lxc -b v6.0.3 --single-branch --depth=1
+git clone https://github.com/lxc/lxc -b v6.0.5 --single-branch --depth=1
 cd lxc
 
 cat <<'EOF' > cross.txt
 [binaries]
-c = 'aarch64-linux-android32-clang'
-cpp = 'aarch64-linux-android32-clang++'
+c = 'x86_64-linux-android34-clang'
+cpp = 'x86_64-linux-android34-clang++'
 ar = 'llvm-ar'
 strip = 'llvm-strip'
 
 [host_machine]
 system = 'android'
-cpu_family = 'aarch64'
-cpu = 'aarch64'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
 endian = 'little'
 EOF
 
